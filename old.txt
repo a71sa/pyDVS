@@ -1,0 +1,127 @@
+rimgNOT = cv2.bitwise_not(rimg)  # could just use 255-img
+
+  kernel1 = np.array([[0, 0, 0],
+                    [0, 1, 0],
+                    [0, 0, 0]], np.uint8)
+  kernel2 = np.array([[1, 1, 1],
+                    [1, 0, 1],
+                    [1, 1, 1]], np.uint8)
+
+  kernel1 = np.zeros((3,3),np.uint8)
+  kernel1[1,1] = 1
+  kernel2 = np.ones((3,3),np.uint8)
+  kernel2[1,1]=0
+
+  #hitormiss1 = cv2.morphologyEx(rimg, cv2.MORPH_ERODE, kernel1)
+  #hitormiss2 = cv2.morphologyEx(rimgNOT, cv2.MORPH_ERODE, kernel2)
+  #hitormiss = cv2.bitwise_and(hitormiss1, hitormiss2)
+
+  #hitormiss_comp = cv2.bitwise_not(hitormiss)  # could just use 255-img
+  #del_isolated = cv2.bitwise_and(rimg, rimg, mask=hitormiss_comp)
+
+
+
+  kernel = np.ones((2,1),np.uint8)
+  kernel2 = np.ones((2,2),np.uint8)
+  kernel3 = np.ones((2,2),np.uint8)
+  kernelp = np.ones((1,2),np.uint8)
+  
+  #opening = cv2.morphologyEx(fm, cv2.MORPH_OPEN, kernel)
+  #closing = cv2.morphologyEx(imges, cv2.MORPH_CLOSE, kernel)
+  #dilation = cv2.dilate(closing,kernel,iterations = 3)
+  #opening = cv2.morphologyEx(dilation, cv2.MORPH_OPEN, kernel)
+
+
+
+  #dilationR = cv2.dilate(imgesR,kernel,iterations = 2)
+  #dilationG = cv2.dilate(imgesG,kernel,iterations = 2)
+  #img=cv2.erode(dilationR,kernel,iterations = 4)
+
+
+
+
+  #rimg= del_isolated
+
+  ret,thresh = cv2.threshold(rimg,127,255,cv2.THRESH_BINARY)
+  contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+  #img=cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+  imges11=np.zeros([width,height,3],np.uint8)
+  cv2.drawContours(imges11,contours,-1,(255,0,255),3)
+  cv2.imshow('output1',imges11)
+
+  try: hierarchy = hierarchy[0]
+  except: hierarchy = []
+
+  min_x, min_y = width, height
+  max_x = max_y = 0
+
+  # computes the bounding box for the contour, and draws it on the frame,
+  for contour, hier in zip(contours, hierarchy):
+      (x,y,w,h) = cv2.boundingRect(contour)
+      min_x, max_x = min(x, min_x), max(x+w, max_x)
+      min_y, max_y = min(y, min_y), max(y+h, max_y)
+      if w > 10 and h > 10  and w<150 and h<150:
+          cv2.rectangle(imges11, (x,y), (x+w,y+h), (255, 0, 255), 2)
+
+  if max_x - min_x > 10 and max_y - min_y > 10 and max_y - min_y < 150 and max_x - min_x<150:
+      cv2.rectangle(imges11, (min_x, min_y), (max_x, max_y), (255, 0, 0), 2)
+  cv2.imshow('output2',imges11)
+  
+  
+  #for noise reduction
+  #img = cv2.medianBlur(imgesR,2)
+  openingG = cv2.morphologyEx(imgesG,cv2.MORPH_CLOSE,kernel3, iterations = 1)
+  openingR = cv2.morphologyEx(imgesR,cv2.MORPH_OPEN,kernel, iterations = 1)
+  opening = cv2.morphologyEx(imges,cv2.MORPH_OPEN,kernel2, iterations = 1 )
+
+  #openingG = cv2.dilate(openingG,kernel2,iterations=1)
+  #---------------------------------
+  # Finding sure foreground area
+  #openingG = cv2.distanceTransform(openingG,cv2.DIST_L2,5)
+  #ret, openingG = cv2.threshold(openingG,0.6*openingG.max(),255,0)
+
+  #openingG = cv2.morphologyEx(openingG, cv2.MORPH_CLOSE, kernel2)
+
+  #openingG = cv2.dilate(openingG,kernel3,iterations=5)
+
+  #sure_bg = cv2.dilate(opening,kernel,iterations=3)
+  #sure_bg = cv2.dilate(opening,kernel,iterations=3)
+
+
+  cv2.imshow ("RAW NOISE", imgesR) 
+  #cv2.imshow ("morphologyG", openingG)
+  #cv2.imshow ("morphology", opening)
+  openingR = rimg
+
+  cv2.imshow ("test R", rawfiltered)
+
+
+    #rimg = cv2.morphologyEx(imgesR,cv2.MORPH_CLOSE,kernel,iterations = 1)
+  #rimg = cv2.erode(imgesR,kernel3,iterations = 5)
+  #rimg = singlefilter(rimg,1,(3,3),2)
+
+
+    kernel2 = np.ones((2,2),np.uint8)
+  kernel3 = np.ones((2,2),np.uint8)
+  kernelp = np.ones((1,2),np.uint8)
+
+
+
+
+
+
+
+
+  kernel = np.ones((2,1),np.uint8)
+  kernelp = np.ones((1,2),np.uint8)
+  rimg = imgesR
+
+  singlenoisefilter(rimg,128,3)
+  rawfiltered=rimg
+  cv2.imshow ("raw R", imgesR)
+  cv2.imshow ("rawfiltered R", rawfiltered)
+
+  openingR = cv2.dilate(rimg,kernel,iterations=1)
+  openingR = cv2.dilate(openingR,kernelp,iterations=1)
+
+  cv2.imshow ("ropeningR", openingR)
