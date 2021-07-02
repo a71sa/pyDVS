@@ -125,3 +125,10 @@ rimgNOT = cv2.bitwise_not(rimg)  # could just use 255-img
   openingR = cv2.dilate(openingR,kernelp,iterations=1)
 
   cv2.imshow ("ropeningR", openingR)
+
+
+
+    if winnumcheck(pic2d[i-1:i+2,j-1:j+2])>=thresh:
+                pass
+            else :
+                pic2d[i,j]=0

@@ -12,32 +12,30 @@ DTYPE = np.uint8
 # type with a _t-suffix.
 ctypedef np.uint8_t DTYPE_t
 
-@cython.boundscheck(False) # turn off bounds-checking for entire function
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
-cdef winnumcheck(np.ndarray[DTYPE_t, ndim=2]  ar):
-    cdef int i,j
-    cdef int k=0
-    for i in range(0,3):
-        for j in range(0,3):
-            if ar[i,j]>0:
-                k+=1
-    return k
-
-
-
-
 
 @cython.boundscheck(False) # turn off bounds-checking for entire function
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
 def singlenoisefilter(np.ndarray[DTYPE_t, ndim=2]  pic2d,int size,int thresh):
     cdef int i,j
-    for i in range(1,size-1):
-        for j in range(1,size-1):
-            if np.count_nonzero(pic2d[i-1:i+2,j-1:j+2])>=thresh:
+    cdef int x,y
+    cdef int k=0
+    for i in range(2,size-2):
+        for j in range(2,size-2):
+            k=0
+            for x in range(0,3):
+                for y in range(0,3):
+                    if pic2d[i-1+x,j-1+y]>0:
+                        k+=1
+            if(k>=thresh):
                 pass
             else :
                 pic2d[i,j]=0
+
     pic2d[0,:]=0
     pic2d[:,0]=0
     pic2d[size-1,:]=0
     pic2d[:,size-1]=0
+
+
+
+#=================================
