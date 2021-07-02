@@ -251,7 +251,7 @@ def main():
   # main loop                                                            #
   
   is_first_pass = True
-  
+  pTime =0
   while(running.value == 1):
     # get an image from video source
     if is_first_pass:
@@ -261,6 +261,10 @@ def main():
       curr = grab_frame(video_dev, scale_width,  scale_height, col_from, col_to)
     
     img_queue.put(curr)
+    cTime = time.time()
+    fps = 1 / (cTime - pTime)
+    pTime = cTime
+    print("%d frames per second"%(fps))
     
   
   img_queue.put(None)
