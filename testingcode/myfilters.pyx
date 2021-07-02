@@ -15,21 +15,25 @@ ctypedef np.uint8_t DTYPE_t
 
 @cython.boundscheck(False) # turn off bounds-checking for entire function
 @cython.wraparound(False)  # turn off negative index wrapping for entire function
-def singlenoisefilter(np.ndarray[DTYPE_t, ndim=2]  pic2d,int size,int thresh):
+def singlenoisefilter(np.ndarray[DTYPE_t, ndim=2] flag,np.ndarray[DTYPE_t, ndim=2]  pic2d,int size,int thresh):
     cdef int i,j
     cdef int x,y
     cdef int k=0
-    for i in range(2,size-2):
-        for j in range(2,size-2):
+    
+    for i in range(1,size-1):
+        for j in range(1,size-1):
             k=0
             for x in range(0,3):
                 for y in range(0,3):
                     if pic2d[i-1+x,j-1+y]>0:
                         k+=1
             if(k>=thresh):
-                pass
+                for x in range(0,3):
+                    for y in range(0,3):
+                        flag[i-1+x,j-1+y]=1
             else :
-                pic2d[i,j]=0
+                if flag[i,j]==0:
+                    pic2d[i,j]=0
 
     pic2d[0,:]=0
     pic2d[:,0]=0
