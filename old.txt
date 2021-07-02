@@ -131,4 +131,27 @@ rimgNOT = cv2.bitwise_not(rimg)  # could just use 255-img
     if winnumcheck(pic2d[i-1:i+2,j-1:j+2])>=thresh:
                 pass
             else :
+
+
                 pic2d[i,j]=0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 ret,thresh = cv2.threshold(imgR,127,255,cv2.THRESH_BINARY)
+  contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
+  #img=cv2.cvtColor(img,cv2.COLOR_GRAY2BGR)
+  imges11=np.zeros([128,128,3],np.uint8)
+  cv2.drawContours(imges11,contours,-1,(255,0,255),3)
+  cv2.imshow('output1',imges11)
