@@ -1,9 +1,6 @@
 # To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
 # %%
-from IPython import get_ipython
-
-# %%
 import time
 import numpy as np
 import cv2
@@ -12,22 +9,8 @@ import pydvs.generate_spikes as gs
 import cython
 from testingcode.myfilters import singlenoisefilter
 
-
-get_ipython().run_line_magic('matplotlib', 'inline')
-
-# %% [markdown]
-# 
-# 
-# 
-# 
-# 
-# # defines
-
 # %%
-
-# -------------------------------------------------------------------- #
-# grab / rescale frame                                                 #
-
+# grab / rescale frame  
 def grab_first(dev, res):
   _, raw = dev.read()
   height, width, _ = raw.shape
@@ -95,21 +78,11 @@ max_diff = 0
 
 
 # %%
-
-
-
-
-
-
-
 # -------------------------------------------------------------------- #
 # inhibition related                                                   #
-
 inh_width = 2
 is_inh_on = True
 inh_coords = gs.generate_inh_coords(width, height, inh_width)
-
-
 # -------------------------------------------------------------------- #
 # camera/frequency related                                             #
 
@@ -129,7 +102,9 @@ if fps == 0.0:
   fps = 125.0
 max_time_ms = int(1000./float(fps))
 
+
 # %%
+
 def Base_work(curr,spikes):
     # get an image from video source
   curr[:] = grab_frame(video_dev, scale_width,  scale_height, col_from, col_to)
@@ -174,11 +149,6 @@ def Base_work(curr,spikes):
   cv2.imshow (WINDOW_NAME, spk_img.astype(uint8)) 
   cv2.putText(fm,f'FPS: {int(fps)}',(0,0),cv2.FONT_HERSHEY_PLAIN,3,(8,255,8),3)
   return imgraw
-
-
-# %%
-
-
 
 # %%
 def get_white_frame(spikes):
@@ -277,12 +247,6 @@ def base_filter(current,imgesR,imgesG,imges):
   img  = dili
 
   return img,imgG,imgR
-
-
-# %%
-
-
-
 # %%
 #---------------------- main loop -------------------------------------#
 LOOP_START =True
@@ -331,8 +295,3 @@ cv2.destroyAllWindows()
 
 
 # %%
-
-# %%
-
-
-

@@ -3,6 +3,7 @@ Created on Nov 24, 2009
 Call python setup.py build_ext --inplace
 @author: fred
 '''
+import setuptools
 import numpy
 from distutils.core import setup
 from distutils.extension import Extension
